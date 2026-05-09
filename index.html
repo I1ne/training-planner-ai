@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>План тренировок</title>
+
+  <style>
+    :root{
+      --bg:#0b0c0f;
+      --panel:#12141a;
+      --panel-2:#0f1116;
+      --text:#f4f1ea;
+      --muted:rgba(244,241,234,.72);
+      --line:rgba(244,241,234,.10);
+      --gold:#c6a15b;
+      --gold-2:#e2c07a;
+      --danger:#ff5d5d;
+      --radius:18px;
+      --shadow:0 18px 50px rgba(0,0,0,.45);
+      --shadow-soft:0 10px 30px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(900px 700px at 80% 10%, rgba(198,161,91,.16), transparent 60%),
+        radial-gradient(900px 700px at 10% 20%, rgba(226,192,122,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg), #07080a 80%);
+      color:var(--text);
+      line-height:1.4;
+    }
+    .wrap{max-width:1080px;margin:0 auto;padding:28px 18px 70px;}
+    header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px;}
+    .brand{display:flex;align-items:center;gap:12px;user-select:none;}
+    .logo{
+      width:42px;height:42px;border-radius:14px;
+      background:
+        radial-gradient(14px 14px at 30% 30%, rgba(244,241,234,.25), transparent 60%),
+        radial-gradient(20px 20px at 70% 70%, rgba(198,161,91,.28), transparent 60%),
+        linear-gradient(135deg, rgba(198,161,91,.95), rgba(18,20,26,1));
+      border:1px solid rgba(198,161,91,.45);
+      box-shadow:var(--shadow-soft);
+    }
+    .brand h1{font-size:14px;margin:0;letter-spacing:.08em;text-transform:uppercase;}
+    .brand small{display:block;margin-top:2px;font-size:12px;color:var(--muted);letter-spacing:.02em;}
+    .btn{
+      border:none;cursor:pointer;border-radius:999px;padding:10px 14px;
+      font-weight:650;letter-spacing:.02em;color:#0b0c0f;
+      background:linear-gradient(135deg,var(--gold),var(--gold-2));
+      box-shadow:0 10px 22px rgba(198,161,91,.18);
+      transition:transform .12s ease, filter .12s ease;
+    }
+    .btn:hover{transform:translateY(-1px);filter:brightness(1.02);}
+    .btn:active{transform:translateY(0px);}
+    .hero{
+      border:1px solid rgba(198,161,91,.25);
+      background:linear-gradient(180deg, rgba(18,20,26,.86), rgba(10,11,15,.72));
+      border-radius:calc(var(--radius) + 6px);
+      box-shadow:var(--shadow);
+      padding:22px 22px 18px;
+      margin-bottom:18px;
+      position:relative;overflow:hidden;
+    }
+    .hero:before{
+      content:"";position:absolute;inset:-2px;
+      background:radial-gradient(900px 300px at 10% 0%, rgba(198,161,91,.20), transparent 60%);
+      pointer-events:none;
+    }
+    .hero-inner{position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+    .hero h2{margin:0 0 6px 0;font-size:26px;letter-spacing:.01em;}
+    .hero p{margin:0;color:var(--muted);max-width:760px;}
+    .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:16px;margin-top:14px;}
+    @media (max-width:940px){.grid{grid-template-columns:1fr}}
+    .card{
+      border:1px solid var(--line);
+      background:rgba(18,20,26,.78);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow-soft);
+      padding:18px;
+      backdrop-filter:blur(10px);
+    }
+    .card h3{margin:0 0 10px;font-size:14px;text-transform:uppercase;letter-spacing:.10em;color:rgba(244,241,234,.88);}
+    .divider{height:1px;background:var(--line);margin:12px 0 16px;}
+    .form{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    @media (max-width:640px){.form{grid-template-columns:1fr}}
+    label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;}
+    input, select, textarea{
+      width:100%;padding:12px 12px;border-radius:14px;
+      border:1px solid rgba(244,241,234,.14);
+      background:rgba(15,17,22,.78);color:var(--text);outline:none;
+      transition:border-color .12s ease, box-shadow .12s ease;
+    }
+    textarea{min-height:96px;resize:vertical;}
+    input:focus, select:focus, textarea:focus{
+      border-color:rgba(198,161,91,.55);
+      box-shadow:0 0 0 4px rgba(198,161,91,.12);
+    }
+    .span-2{grid-column:span 2;}
+    @media (max-width:640px){.span-2{grid-column:span 1;}}
+    .actions-row{display:flex;gap:10px;align-items:center;justify-content:flex-end;flex-wrap:wrap;margin-top:12px;}
+    .btn-ghost{
+      border:1px solid rgba(198,161,91,.38);
+      background:transparent;color:rgba(244,241,234,.92);
+      padding:10px 14px;border-radius:999px;cursor:pointer;
+      transition:background .12s ease, border-color .12s ease;
+    }
+    .btn-ghost:hover{background:rgba(198,161,91,.10);border-color:rgba(198,161,91,.55);}
+
+    .status{
+      display:flex;align-items:center;gap:10px;
+      padding:10px 12px;border-radius:14px;
+      border:1px dashed rgba(244,241,234,.18);
+      background:rgba(15,17,22,.60);color:var(--muted);
+      margin-bottom:12px;
+    }
+    .dot{width:10px;height:10px;border-radius:999px;background:rgba(244,241,234,.35);}
+    .dot.ok{background:rgba(198,161,91,.95);}
+    .dot.err{background:var(--danger);}
+
+    .day{
+      border:1px solid rgba(244,241,234,.12);
+      background:rgba(15,17,22,.55);
+      border-radius:16px;
+      padding:12px 12px;
+      margin-bottom:10px;
+    }
+    .day-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;}
+    .day-title{margin:0;font-weight:750;letter-spacing:.02em;}
+    .tag{
+      font-size:11px;color:rgba(11,12,15,.92);
+      background:linear-gradient(135deg, rgba(198,161,91,.95), rgba(226,192,122,.95));
+      padding:5px 10px;border-radius:999px;white-space:nowrap;
+    }
+    .list{margin:0;padding-left:18px;color:rgba(244,241,234,.88);}
+    .list li{margin:6px 0;}
+    .explain{margin-top:12px;color:var(--muted);font-size:13px;}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>План тренировок</h1>
+          <small>Персональная программа под ваши цели</small>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-inner">
+        <div>
+          <h2>Персональный план тренировок</h2>
+          <p>Заполните профиль — и получите программу на неделю с учётом уровня, оборудования и ограничений.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h3>Анкета</h3>
+        <div class="divider"></div>
+
+        <form id="profileForm" class="form">
+          <div>
+            <label for="goal">Цель</label>
+            <select id="goal" required>
+              <option value="Похудение">Похудение</option>
+              <option value="Набор мышечной массы">Набор мышечной массы</option>
+              <option value="Поддержание формы">Поддержание формы</option>
+              <option value="Выносливость">Выносливость</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="level">Уровень подготовки</label>
+            <select id="level" required>
+              <option value="Новичок">Новичок</option>
+              <option value="Средний">Средний</option>
+              <option value="Продвинутый">Продвинутый</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="daysPerWeek">Тренировок в неделю</label>
+            <select id="daysPerWeek" required>
+              <option value="2">2</option>
+              <option value="3" selected>3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="duration">Длительность (мин)</label>
+            <select id="duration" required>
+              <option value="30">30</option>
+              <option value="45" selected>45</option>
+              <option value="60">60</option>
+              <option value="75">75</option>
+            </select>
+          </div>
+
+          <div class="span-2">
+            <label for="equipment">Оборудование</label>
+            <input id="equipment" placeholder="Напр.: зал, гантели, штанга / или дом, коврик" />
+          </div>
+
+          <div class="span-2">
+            <label for="constraints">Ограничения</label>
+            <textarea id="constraints" placeholder="Напр.: беречь колени; нельзя прыжки; поясница и т.д."></textarea>
+          </div>
+
+          <div class="span-2">
+            <label for="notes">Пожелания</label>
+            <textarea id="notes" placeholder="Напр.: акцент на спину и корпус; кардио умеренно"></textarea>
+          </div>
+
+          <div class="span-2 actions-row">
+            <button class="btn-ghost" type="reset">Очистить</button>
+            <button class="btn" type="submit">Получить план</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3>Результат</h3>
+        <div class="divider"></div>
+
+        <div class="status">
+          <span class="dot" id="dot"></span>
+          <span id="statusText">Заполните анкету и нажмите «Получить план».</span>
+        </div>
+
+        <div id="resultArea"></div>
+        <div class="explain" id="explain"></div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const API_URL = "/recommend";
+
+    const form = document.getElementById("profileForm");
+    const statusEl = document.getElementById("statusText");
+    const dotEl = document.getElementById("dot");
+    const resultArea = document.getElementById("resultArea");
+    const explainEl = document.getElementById("explain");
+
+    function setStatus(type, text){
+      statusEl.textContent = text;
+      dotEl.classList.remove("ok","err");
+      if(type === "ok") dotEl.classList.add("ok");
+      if(type === "err") dotEl.classList.add("err");
+    }
+
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function renderPlan(data){
+      resultArea.innerHTML = "";
+      explainEl.textContent = "";
+
+      const plan = Array.isArray(data?.plan) ? data.plan : null;
+
+      if(!plan){
+        const card = document.createElement("div");
+        card.className = "day";
+        card.innerHTML = `
+          <div class="day-head">
+            <p class="day-title">План</p>
+            <span class="tag">Ответ</span>
+          </div>
+          <div style="color: rgba(244,241,234,.88); white-space: pre-wrap;">${escapeHtml(data?.text ?? "Не удалось сформировать план.")}</div>
+        `;
+        resultArea.appendChild(card);
+        return;
+      }
+
+      plan.forEach((d, idx) => {
+        const day = d.day ?? `День ${idx + 1}`;
+        const focus = d.focus ?? "Тренировка";
+        const items = Array.isArray(d.items) ? d.items : [];
+
+        const card = document.createElement("div");
+        card.className = "day";
+        card.innerHTML = `
+          <div class="day-head">
+            <p class="day-title">${escapeHtml(day)}</p>
+            <span class="tag">${escapeHtml(focus)}</span>
+          </div>
+          <ul class="list">${items.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul>
+        `;
+        resultArea.appendChild(card);
+      });
+
+      if(data?.explain) explainEl.textContent = data.explain;
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      setStatus("", "Формируем план…");
+      resultArea.innerHTML = "";
+      explainEl.textContent = "";
+
+      const payload = {
+        goal: document.getElementById("goal").value,
+        level: document.getElementById("level").value,
+        days_per_week: Number(document.getElementById("daysPerWeek").value),
+        duration_min: Number(document.getElementById("duration").value),
+        equipment: document.getElementById("equipment").value?.trim(),
+        constraints: document.getElementById("constraints").value?.trim(),
+        notes: document.getElementById("notes").value?.trim(),
+      };
+
+      try{
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if(!res.ok){
+          const text = await res.text();
+          setStatus("err", `Ошибка. ${text.slice(0, 200)}`);
+          return;
+        }
+
+        const data = await res.json();
+        setStatus("ok", "Готово.");
+        renderPlan(data);
+
+      } catch (err){
+        setStatus("err", "Сервис временно недоступен. Попробуйте позже.");
+      }
+    });
+  </script>
+</body>
+</html>
