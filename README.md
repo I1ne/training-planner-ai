@@ -28,3 +28,44 @@
 │ └── presentation.pptx # Презентация проекта
 └── README.md
  ```
+ 
+## Как запустить локально
+
+1. Клонируйте репозиторий:
+   ```bash
+   git clone https://github.com/I1ne/training-planner-ai.git
+   cd training-planner-ai
+    ```
+    
+2. Создайте и активируйте виртуальное окружение:
+   ```bash
+python -m venv venv
+source venv/bin/activate  # для Windows: venv\Scripts\activate
+   ```
+
+3. Установите зависимости:
+   ```bash
+pip install -r requirements.txt
+   ```
+   
+4. Создайте файл .env в корне проекта и добавьте ваши учётные данные GigaChat API:
+   ```bash
+text
+GIGACHAT_CREDENTIALS=ваш_токен
+GIGACHAT_SCOPE=GIGACHAT_API_PERS
+GIGACHAT_MODEL=GigaChat
+GIGACHAT_CA_BUNDLE_FILE=путь/до/сертификата.pem
+   ```
+
+5. Запустите сервер:
+   ```bash
+python -m uvicorn app:app --reload
+   ```
+   
+6. Откройте в браузере http://127.0.0.1:8000
+
+
+## Проектная документация
+
+Полный текст курсовой работы с анализом предметной области, техническим заданием, проектированием архитектуры и оценкой эффективности доступен в docs/course_project.pdf.
+
